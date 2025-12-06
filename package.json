@@ -36,14 +36,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/omega-suite-finance/gitforms"
+    "url": "https://github.com/Luigigreco/gitforms"
   },
-  "author": "omega-suite-finance",
+  "author": "Luigi Greco",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/omega-suite-finance/gitforms/issues"
+    "url": "https://github.com/Luigigreco/gitforms/issues"
   },
-  "homepage": "https://github.com/omega-suite-finance/gitforms#readme",
+  "homepage": "https://github.com/Luigigreco/gitforms#readme",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
