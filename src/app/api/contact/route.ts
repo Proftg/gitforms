@@ -4,7 +4,7 @@ interface ContactFormData {
   firstName: string
   lastName: string
   email: string
-  company: string
+  company?: string
   message: string
 }
 
@@ -12,10 +12,10 @@ export async function POST(request: NextRequest) {
   try {
     const body: ContactFormData = await request.json()
 
-    // Validate required fields
-    if (!body.firstName || !body.lastName || !body.email || !body.company || !body.message) {
+    // Validate required fields (company is optional)
+    if (!body.firstName || !body.lastName || !body.email || !body.message) {
       return NextResponse.json(
-        { error: 'Tutti i campi sono obbligatori' },
+        { error: 'Tutti i campi obbligatori devono essere compilati' },
         { status: 400 }
       )
     }
@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Prepare lead data
+    // Prepare contact data
     const fullName = `${body.firstName} ${body.lastName}`
     const timestamp = new Date()
     const dateStr = timestamp.toLocaleDateString('it-IT', { 
@@ -61,12 +61,13 @@ export async function POST(request: NextRequest) {
       minute: '2-digit'
     })
 
-    // Save to GitHub (used as free database)
-    const leadData = `# Nuovo Contatto
+    // Save to GitHub (free database storage)
+    const contactData = `# Nuovo Contatto
 
-**Nome Completo:** ${fullName}  
+**Nome:** ${body.firstName}  
+**Cognome:** ${body.lastName}  
 **Email:** ${body.email}  
-**Azienda:** ${body.company}  
+**Azienda:** ${body.company || 'Non fornita'}  
 **Data:** ${dateStr}
 
 ## Messaggio
@@ -88,15 +89,15 @@ ${body.message}
           'X-GitHub-Api-Version': '2022-11-28',
         },
         body: JSON.stringify({
-          title: `📧 ${fullName} - ${body.company}`,
-          body: leadData,
-          labels: ['lead'],
+          title: `📧 ${fullName}${body.company ? ' - ' + body.company : ''}`,
+          body: contactData,
+          labels: ['contatto'],
         }),
       }
     )
 
     if (!response.ok) {
-      console.error('Failed to save lead')
+      console.error('Failed to save contact')
       return NextResponse.json(
         { error: 'Errore durante il salvataggio. Riprova.' },
         { status: 500 }
