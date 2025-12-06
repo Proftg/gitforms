@@ -78,7 +78,7 @@ export default function Home() {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label htmlFor="firstName" className="block text-sm font-medium text-text-label mb-1">
-                {t.firstName} {t.required}
+                {t.fields.firstName} {t.required}
               </label>
               <input
                 type="text"
@@ -92,7 +92,7 @@ export default function Home() {
 
             <div>
               <label htmlFor="lastName" className="block text-sm font-medium text-text-label mb-1">
-                {t.lastName} {t.required}
+                {t.fields.lastName} {t.required}
               </label>
               <input
                 type="text"
@@ -107,7 +107,7 @@ export default function Home() {
 
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-text-label mb-1">
-              {t.email} {t.required}
+              {t.fields.email} {t.required}
             </label>
             <input
               type="email"
@@ -121,7 +121,7 @@ export default function Home() {
 
           <div>
             <label htmlFor="company" className="block text-sm font-medium text-text-label mb-1">
-              {t.company} {t.required}
+              {t.fields.company} {t.required}
             </label>
             <input
               type="text"
@@ -135,7 +135,7 @@ export default function Home() {
 
           <div>
             <label htmlFor="message" className="block text-sm font-medium text-text-label mb-1">
-              {t.message} {t.required}
+              {t.fields.message} {t.required}
             </label>
             <textarea
               id="message"
@@ -152,7 +152,7 @@ export default function Home() {
             disabled={loading}
             className="w-full bg-primary text-white py-3 px-6 rounded-button font-medium hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
-            {loading ? t.submitting : t.submit}
+            {loading ? t.buttons.submitting : t.buttons.submit}
           </button>
         </form>
       </div>

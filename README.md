@@ -6,13 +6,14 @@ Ogni volta che qualcuno compila il form, ricevi un'email di notifica. Zero costi
 
 ## Caratteristiche
 
-- ✅ Form semplice e pulito
+- ✅ **100% Configurabile senza codice** (JSON files)
 - ✅ Email automatiche quando ricevi un contatto
-- ✅ **Completamente configurabile** (colori, testi, lingua)
-- ✅ Multilingua (IT/EN) con auto-rilevamento
+- ✅ Multilingua (IT/EN) con auto-rilevamento browser
+- ✅ Stile personalizzabile (colori, bordi, ombre)
+- ✅ Testi personalizzabili (etichette, messaggi)
 - ✅ Next.js 13+ con App Router
-- ✅ TypeScript per sicurezza
-- ✅ Tailwind CSS per lo stile
+- ✅ TypeScript
+- ✅ Tailwind CSS
 - ✅ Completamente gratuito
 
 ## Come Funziona
@@ -21,117 +22,126 @@ Ogni volta che qualcuno compila il form, ricevi un'email di notifica. Zero costi
 Utente compila form → Dati salvati → Email automatica inviata
 ```
 
-I dati vengono salvati usando GitHub come storage gratuito (funziona come un database semplice). Quando arriva un nuovo contatto, GitHub manda automaticamente un'email.
-
 ## Setup Rapido
 
-### 1. Clona il repository
-
 ```bash
+# 1. Clona
 git clone https://github.com/omega-suite-finance/lead-capture-system.git
 cd lead-capture-system
-```
 
-### 2. Installa dipendenze
-
-```bash
+# 2. Installa
 npm install
-```
 
-### 3. Configura GitHub Token
-
-Per salvare i contatti hai bisogno di un GitHub token (è gratuito):
-
-1. Vai su https://github.com/settings/tokens
-2. Clicca "Generate new token (classic)"
-3. Nome: `Landing Page Contact Form`
-4. Seleziona: **`repo`**
-5. Genera e copia il token
-
-### 4. Configura le variabili d'ambiente
-
-```bash
+# 3. Configura
 cp .env.example .env.local
-```
+# Modifica .env.local con il tuo GITHUB_TOKEN e GITHUB_REPO
 
-Modifica `.env.local`:
-
-```env
-GITHUB_TOKEN=ghp_il_tuo_token_qui
-GITHUB_REPO=tuo-username/lead-capture-system
-
-# Opzionale: forza una lingua specifica
-# NEXT_PUBLIC_DEFAULT_LOCALE=it
-```
-
-### 5. Avvia il server
-
-```bash
+# 4. Avvia
 npm run dev
 ```
 
-Apri http://localhost:3000 per vedere il form.
+Apri http://localhost:3000
 
 ## 🎨 Personalizzazione (ZERO Codice!)
 
-### Cambiare i Colori
+### 1. Cambia Tutti i Colori
 
-Modifica `config/theme.json`:
+**File:** `config/theme.json`
 
 ```json
 {
   "colors": {
     "primary": {
-      "DEFAULT": "#2563eb",   // Colore principale bottone
-      "hover": "#1d4ed8",     // Colore hover bottone
-      "ring": "#3b82f6"       // Colore focus input
+      "DEFAULT": "#10b981",  // Verde invece di blu
+      "hover": "#059669",
+      "ring": "#34d399"
     }
   }
 }
 ```
 
-**Esempi:**
-- **Verde:** `"DEFAULT": "#10b981"`, `"hover": "#059669"`
-- **Viola:** `"DEFAULT": "#8b5cf6"`, `"hover": "#7c3aed"`
-- **Rosso:** `"DEFAULT": "#ef4444"`, `"hover": "#dc2626"`
+**Altri colori popolari:**
+- Viola: `#8b5cf6`, `#7c3aed`, `#a78bfa`
+- Arancione: `#f97316`, `#ea580c`, `#fb923c`
+- Rosa: `#ec4899`, `#db2777`, `#f472b6`
 
-### Cambiare i Testi dei Campi
+### 2. Cambia Tutti i Testi
 
-Modifica `config/fields.json`:
+**File:** `config/translations.json`
 
 ```json
 {
   "it": {
-    "firstName": "Nome",
-    "lastName": "Cognome",
-    "email": "Email",
-    "company": "Società",     // Cambia "Azienda" in "Società"
-    "message": "Il tuo messaggio"
+    "title": "Richiedi Informazioni",  // Cambia "Contattaci"
+    "fields": {
+      "company": "Società"  // Cambia "Azienda" in "Società"
+    },
+    "buttons": {
+      "submit": "Richiedi Contatto"  // Cambia bottone
+    }
   }
 }
 ```
 
-### Cambiare la Lingua
+### 3. Cambia la Lingua Default
 
-Il form rileva automaticamente la lingua del browser (IT/EN).
-
-Per forzare una lingua, aggiungi in `.env.local`:
+**File:** `.env.local`
 
 ```env
 NEXT_PUBLIC_DEFAULT_LOCALE=it   # Forza italiano
 # oppure
 NEXT_PUBLIC_DEFAULT_LOCALE=en   # Forza inglese
+# oppure rimuovi per auto-detection
 ```
+
+### 4. Aggiungi Nuova Lingua (es. Francese)
+
+**File:** `config/translations.json`
+
+```json
+{
+  "it": { ... },
+  "en": { ... },
+  "fr": {
+    "title": "Contactez-nous",
+    "subtitle": "Remplissez le formulaire...",
+    "fields": {
+      "firstName": "Prénom",
+      "lastName": "Nom",
+      "email": "Email",
+      "company": "Entreprise",
+      "message": "Message"
+    }
+  }
+}
+```
+
+Poi aggiorna `src/app/translations.ts`:
+
+```typescript
+export type Locale = 'it' | 'en' | 'fr'
+```
+
+## 📁 File di Configurazione
+
+| File | Cosa Configuri |
+|------|----------------|
+| **`config/theme.json`** | Colori, bordi, ombre, stile |
+| **`config/translations.json`** | TUTTI i testi (titolo, campi, messaggi, bottoni) |
+| **`.env.local`** | Token GitHub, repo, lingua default |
+
+**Modifica solo questi 3 file = personalizzazione completa!**
 
 ## Campi del Form
 
-- **Nome** (obbligatorio)
-- **Cognome** (obbligatorio)  
-- **Email** (obbligatorio)
-- **Azienda** (obbligatorio)
-- **Messaggio** (obbligatorio)
+Tutti i campi sono **obbligatori**:
+- Nome
+- Cognome
+- Email
+- Azienda
+- Messaggio
 
-## Test con curl
+## Test
 
 ```bash
 curl -X POST http://localhost:3000/api/contact \
@@ -140,107 +150,61 @@ curl -X POST http://localhost:3000/api/contact \
     "firstName": "Mario",
     "lastName": "Rossi",
     "email": "mario@example.com",
-    "company": "ACME Corp",
-    "message": "Vorrei maggiori informazioni"
+    "company": "ACME",
+    "message": "Ciao"
   }'
 ```
 
-Risposta attesa:
+## Deploy Vercel
 
-```json
-{
-  "success": true,
-  "message": "Grazie! Ti contatteremo a breve."
-}
-```
-
-## Notifiche Email
-
-GitHub manda automaticamente email quando ricevi un nuovo contatto. Per riceverle:
-
-1. Vai su https://github.com/settings/notifications
-2. Abilita "Email" nelle notifiche
-3. Fatto! Riceverai un'email per ogni contatto
-
-Ogni email contiene:
-- Nome e cognome
-- Email del contatto
-- Azienda
-- Messaggio completo
-- Data e ora
-
-## Deploy in Produzione
-
-### Vercel (consigliato)
-
-1. Push del codice su GitHub (già fatto ✓)
-2. Importa il repo su [Vercel](https://vercel.com)
-3. Aggiungi le variabili d'ambiente:
+1. Push su GitHub
+2. Importa su [Vercel](https://vercel.com)
+3. Aggiungi variabili:
    - `GITHUB_TOKEN`
    - `GITHUB_REPO`
    - `NEXT_PUBLIC_DEFAULT_LOCALE` (opzionale)
-4. Deploy automatico!
+4. Deploy!
 
-## Analisi Costi
+## Costi
 
 | Servizio | Costo |
 |----------|-------|
-| GitHub (storage) | **€0** |
-| Email automatiche | **€0** |
-| Vercel hosting | **€0** (piano hobby) |
+| GitHub | **€0** |
+| Email | **€0** |
+| Vercel | **€0** |
 | **Totale** | **€0/mese** |
 
-## File di Configurazione
+## Esempi Personalizzazione
 
-| File | Scopo |
-|------|-------|
-| `config/theme.json` | Colori, bordi, ombre |
-| `config/fields.json` | Etichette campi form |
-| `.env.local` | Token GitHub, lingua default |
+### Landing Page Aziendale B2B
+```json
+// config/translations.json
+{
+  "it": {
+    "title": "Richiedi una Demo",
+    "subtitle": "Compila il form per una demo personalizzata",
+    "buttons": { "submit": "Richiedi Demo" }
+  }
+}
 
-**Modifica questi file senza toccare il codice!**
+// config/theme.json
+{ "colors": { "primary": { "DEFAULT": "#1e3a8a" } } }  // Blu corporate
+```
 
-## Sicurezza
+### Landing Page E-commerce
+```json
+// config/translations.json
+{
+  "it": {
+    "title": "Hai Domande?",
+    "fields": { "company": "Settore" },
+    "buttons": { "submit": "Invia Richiesta" }
+  }
+}
 
-- ✅ Token GitHub mai committato (protetto da `.gitignore`)
-- ✅ Validazione email lato server
-- ✅ Validazione campi obbligatori
-- ✅ Gestione errori completa
-- ✅ HTTPS in produzione (con Vercel)
-
-## Troubleshooting
-
-### "Errore di configurazione"
-
-- Verifica che `.env.local` esista
-- Controlla che `GITHUB_TOKEN` sia corretto
-- Verifica che `GITHUB_REPO` sia nel formato `username/repo`
-
-### "Email non valida"
-
-L'utente deve inserire un'email nel formato corretto (`nome@dominio.com`)
-
-### Non ricevo email
-
-1. Controlla le impostazioni notifiche GitHub
-2. Controlla la cartella spam
-3. Verifica che il token abbia il permesso `repo`
-
-### Il form non funziona
-
-1. Apri la console del browser (F12)
-2. Controlla errori nella Network tab
-3. Verifica che il server sia avviato (`npm run dev`)
-
-## Dove Vengono Salvati i Dati?
-
-I contatti vengono salvati nel repository GitHub (tab "Issues"). Ogni contatto è un nuovo "issue" con:
-
-- Titolo: Nome completo e azienda
-- Contenuto: Tutti i dati del contatto
-- Label: "contatto" per trovarlo facilmente
-
-Puoi vedere tutti i contatti su: `https://github.com/tuo-username/lead-capture-system/issues`
+// config/theme.json
+{ "colors": { "primary": { "DEFAULT": "#dc2626" } } }  // Rosso vendita
+```
 
 ## Licenza
 
