@@ -1,0 +1,42 @@
+# Dependencies
+node_modules
+npm-debug.log
+
+# Next.js build output
+.next
+out
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Testing
+coverage
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git
+.gitignore
+
+# Documentation
+README.md
+TESTING.md
+SETUP_DISCOVERABILITY.md
+MONETIZATION.md
+ai.txt
+.ai
+
+# Misc
+*.md
+!package.json
+!package-lock.json
