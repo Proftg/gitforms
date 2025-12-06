@@ -14,6 +14,7 @@ Ogni volta che qualcuno compila il form, ricevi un'email di notifica. Zero costi
 - ✅ Next.js 13+ con App Router
 - ✅ TypeScript
 - ✅ Tailwind CSS
+- ✅ **Deploy ovunque** (Vercel, Netlify, Railway, Docker, AWS...)
 - ✅ Completamente gratuito
 
 ## Come Funziona
@@ -155,24 +156,188 @@ curl -X POST http://localhost:3000/api/contact \
   }'
 ```
 
-## Deploy Vercel
+## 🚀 Deploy Options
 
+### 1. Vercel (Recommended) ⚡
+
+**Più semplice per Next.js** - 2 click, zero configurazione.
+
+```bash
+# Installa Vercel CLI (opzionale)
+npm i -g vercel
+
+# Deploy
+vercel
+```
+
+**Oppure via Dashboard:**
 1. Push su GitHub
-2. Importa su [Vercel](https://vercel.com)
-3. Aggiungi variabili:
+2. Importa su [vercel.com](https://vercel.com/new)
+3. Aggiungi environment variables:
    - `GITHUB_TOKEN`
    - `GITHUB_REPO`
    - `NEXT_PUBLIC_DEFAULT_LOCALE` (opzionale)
-4. Deploy!
+4. Deploy automatico!
 
-## Costi
+**Free Tier:** Illimitato per progetti personali
 
-| Servizio | Costo |
-|----------|-------|
-| GitHub | **€0** |
-| Email | **€0** |
-| Vercel | **€0** |
-| **Totale** | **€0/mese** |
+---
+
+### 2. Netlify
+
+**Ottima alternativa a Vercel** - 2 click, ottimo free tier.
+
+1. Push su GitHub
+2. Importa su [netlify.com](https://app.netlify.com/start)
+3. Build settings:
+   - **Build command:** `npm run build`
+   - **Publish directory:** `.next`
+4. Environment variables:
+   - `GITHUB_TOKEN`
+   - `GITHUB_REPO`
+   - `NEXT_PUBLIC_DEFAULT_LOCALE` (opzionale)
+5. Deploy!
+
+**Free Tier:** 100GB bandwidth/mese
+
+---
+
+### 3. Railway
+
+**Deploy rapido con database inclusi** - 3 click, buon free tier.
+
+1. Push su GitHub
+2. Vai su [railway.app](https://railway.app)
+3. New Project → Deploy from GitHub
+4. Aggiungi variabili d'ambiente (Dashboard → Variables)
+5. Railway auto-rileva Next.js e deploya
+
+**Free Tier:** $5 credit/mese (~500h runtime)
+
+---
+
+### 4. Render.com
+
+**Alternative con free tier** - Auto-sleep dopo inattività.
+
+1. Push su GitHub
+2. New Web Service su [render.com](https://render.com)
+3. Connect repository
+4. Settings:
+   - **Build Command:** `npm install && npm run build`
+   - **Start Command:** `npm start`
+5. Environment variables:
+   - `GITHUB_TOKEN`
+   - `GITHUB_REPO`
+
+**Free Tier:** Illimitato (con auto-sleep)
+
+---
+
+### 5. Docker / Self-Hosted 🐳
+
+**Full control** - Deploy su qualsiasi VPS/cloud.
+
+```bash
+# Build
+docker build -t lead-capture-system .
+
+# Run
+docker run -p 3000:3000 \
+  -e GITHUB_TOKEN=your_token \
+  -e GITHUB_REPO=your_repo \
+  lead-capture-system
+```
+
+**Con Docker Compose:**
+
+```yaml
+# docker-compose.yml
+version: '3.8'
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+      - GITHUB_REPO=${GITHUB_REPO}
+      - NEXT_PUBLIC_DEFAULT_LOCALE=it
+    restart: unless-stopped
+```
+
+```bash
+docker-compose up -d
+```
+
+**Costi:** VPS da €5/mese (DigitalOcean, Hetzner, Linode)
+
+---
+
+### 6. AWS Amplify
+
+**Enterprise deployment** - Auto-scaling, CDN globale.
+
+1. Push su GitHub
+2. AWS Console → Amplify → New App
+3. Connect repository
+4. Build settings (auto-detected):
+   ```yaml
+   version: 1
+   frontend:
+     phases:
+       preBuild:
+         commands:
+           - npm install
+       build:
+         commands:
+           - npm run build
+     artifacts:
+       baseDirectory: .next
+       files:
+         - '**/*'
+     cache:
+       paths:
+         - node_modules/**/*
+   ```
+5. Environment variables:
+   - `GITHUB_TOKEN`
+   - `GITHUB_REPO`
+
+**Free Tier:** 1000 build minuti/mese, 15GB storage
+
+---
+
+## 💰 Costi
+
+| Piattaforma | Free Tier | Costo Paid |
+|-------------|-----------|------------|
+| **GitHub** (storage) | ✅ Illimitato | €0 |
+| **GitHub** (email) | ✅ Illimitato | €0 |
+| **Vercel** | ✅ Illimitato (personal) | €20/mese (team) |
+| **Netlify** | ✅ 100GB bandwidth | €19/mese (pro) |
+| **Railway** | ✅ $5 credit/mese | $5/mese per $5 usage |
+| **Render.com** | ✅ Con auto-sleep | $7/mese (sempre attivo) |
+| **Docker VPS** | ❌ | €5-20/mese |
+| **AWS Amplify** | ✅ 1000 build min | Pay-as-you-go |
+
+**Raccomandazione:** Vercel o Netlify per €0/mese garantito.
+
+---
+
+## 📦 Deployment Comparison
+
+| Feature | Vercel | Netlify | Railway | Render | Docker |
+|---------|--------|---------|---------|--------|--------|
+| **Setup Time** | 2 min | 2 min | 3 min | 5 min | 10 min |
+| **Free Tier** | ✅ Best | ✅ Good | ✅ Limited | ✅ Auto-sleep | ❌ |
+| **Auto Deploy** | ✅ | ✅ | ✅ | ✅ | ❌ Manual |
+| **Custom Domain** | ✅ | ✅ | ✅ | ✅ | ✅ |
+| **SSL/HTTPS** | ✅ Auto | ✅ Auto | ✅ Auto | ✅ Auto | ⚙️ Manual |
+| **Logs** | ✅ | ✅ | ✅ | ✅ | ⚙️ Manual |
+| **Scaling** | ✅ Auto | ✅ Auto | ✅ Auto | ⚙️ Manual | ⚙️ Manual |
+
+---
 
 ## Esempi Personalizzazione
 
