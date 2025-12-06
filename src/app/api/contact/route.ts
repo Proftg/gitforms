@@ -1,129 +1,83 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 interface ContactFormData {
-  name: string
+  firstName: string
+  lastName: string
   email: string
-  company?: string
+  company: string
   message: string
 }
 
 export async function POST(request: NextRequest) {
   try {
-    // Parse request body
     const body: ContactFormData = await request.json()
 
     // Validate required fields
-    if (!body.name || !body.email || !body.message) {
+    if (!body.firstName || !body.lastName || !body.email || !body.company || !body.message) {
       return NextResponse.json(
-        { error: 'Missing required fields: name, email, and message are required' },
+        { error: 'Tutti i campi sono obbligatori' },
         { status: 400 }
       )
     }
 
-    // Validate email format
+    // Validate email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(body.email)) {
       return NextResponse.json(
-        { error: 'Invalid email format' },
+        { error: 'Email non valida' },
         { status: 400 }
       )
     }
 
-    // Get GitHub credentials from environment variables
+    // Get GitHub config
     const GITHUB_TOKEN = process.env.GITHUB_TOKEN
     const GITHUB_REPO = process.env.GITHUB_REPO
 
     if (!GITHUB_TOKEN || !GITHUB_REPO) {
       console.error('Missing GitHub configuration')
       return NextResponse.json(
-        { error: 'Server configuration error. Please contact the administrator.' },
+        { error: 'Errore di configurazione. Contatta l\'amministratore.' },
         { status: 500 }
       )
     }
 
-    // Parse repo (format: owner/repo-name)
     const [owner, repo] = GITHUB_REPO.split('/')
     if (!owner || !repo) {
-      console.error('Invalid GITHUB_REPO format. Expected: owner/repo-name')
+      console.error('Invalid GITHUB_REPO format')
       return NextResponse.json(
-        { error: 'Server configuration error. Please contact the administrator.' },
+        { error: 'Errore di configurazione. Contatta l\'amministratore.' },
         { status: 500 }
       )
     }
 
-    // Extract lead metadata
-    const userAgent = request.headers.get('user-agent') || 'Unknown'
-    const referer = request.headers.get('referer') || 'Direct'
+    // Prepare lead data
+    const fullName = `${body.firstName} ${body.lastName}`
     const timestamp = new Date()
-    const dateStr = timestamp.toLocaleDateString('en-US', { 
+    const dateStr = timestamp.toLocaleDateString('it-IT', { 
       year: 'numeric', 
       month: 'long', 
-      day: 'numeric' 
-    })
-    const timeStr = timestamp.toLocaleTimeString('en-US', {
+      day: 'numeric',
       hour: '2-digit',
-      minute: '2-digit',
-      timeZoneName: 'short'
+      minute: '2-digit'
     })
 
-    // Determine lead source
-    let leadSource = 'Landing Page - Direct'
-    if (referer && referer !== 'Direct') {
-      const refUrl = new URL(referer)
-      leadSource = `Landing Page - Referrer: ${refUrl.hostname}`
-    }
+    // Save to GitHub (used as free database)
+    const leadData = `# Nuovo Contatto
 
-    // Create Issue title (CRM-style)
-    const companyInfo = body.company ? ` | ${body.company}` : ''
-    const issueTitle = `💼 New Lead: ${body.name}${companyInfo}`
+**Nome Completo:** ${fullName}  
+**Email:** ${body.email}  
+**Azienda:** ${body.company}  
+**Data:** ${dateStr}
 
-    // Create Issue body (CRM-oriented format)
-    const issueBody = `## 📊 Lead Information
+## Messaggio
 
-| Field | Value |
-|-------|-------|
-| **Full Name** | ${body.name} |
-| **Email** | [\`${body.email}\`](mailto:${body.email}) |
-| **Company** | ${body.company || '_Not provided_'} |
-| **Lead Source** | ${leadSource} |
-| **Captured Date** | ${dateStr} |
-| **Captured Time** | ${timeStr} |
-| **Lead Score** | 🔵 To be qualified |
-
-## 💬 Lead Message
-
-> ${body.message.split('\n').join('\n> ')}
-
-## 🎯 Next Actions
-
-- [ ] Initial contact within 24h
-- [ ] Qualify lead (budget, timeline, decision maker)
-- [ ] Schedule discovery call
-- [ ] Send proposal/pricing
-
-## 📝 Internal Notes
-
-_Add your notes here as you progress through the sales pipeline..._
-
-## 🔍 Technical Details
-
-<details>
-<summary>Click to expand</summary>
-
-- **User Agent**: ${userAgent}
-- **Referrer**: ${referer}
-- **Timestamp (ISO)**: ${timestamp.toISOString()}
-
-</details>
+${body.message}
 
 ---
-
-*🤖 Automatically captured by Lead Capture System*
+*Ricevuto dalla landing page*
 `
 
-    // Create GitHub Issue via GitHub API
-    // Labels represent lead pipeline states
-    const githubResponse = await fetch(
+    const response = await fetch(
       `https://api.github.com/repos/${owner}/${repo}/issues`,
       {
         method: 'POST',
@@ -134,37 +88,33 @@ _Add your notes here as you progress through the sales pipeline..._
           'X-GitHub-Api-Version': '2022-11-28',
         },
         body: JSON.stringify({
-          title: issueTitle,
-          body: issueBody,
-          labels: ['new-lead', 'uncontacted', 'landing-page'],
+          title: `📧 ${fullName} - ${body.company}`,
+          body: leadData,
+          labels: ['lead'],
         }),
       }
     )
 
-    if (!githubResponse.ok) {
-      const errorData = await githubResponse.json()
-      console.error('GitHub API error:', errorData)
+    if (!response.ok) {
+      console.error('Failed to save lead')
       return NextResponse.json(
-        { error: 'Failed to save lead. Please try again later.' },
+        { error: 'Errore durante il salvataggio. Riprova.' },
         { status: 500 }
       )
     }
 
-    const issueData = await githubResponse.json()
-
+    // Success - GitHub will send email notification automatically
     return NextResponse.json(
       {
         success: true,
-        message: 'Thank you! Your information has been received. We\'ll contact you within 24 hours.',
-        leadId: issueData.number,
-        leadUrl: issueData.html_url,
+        message: 'Grazie! Ti contatteremo a breve.',
       },
       { status: 201 }
     )
   } catch (error) {
-    console.error('Error processing lead capture:', error)
+    console.error('Error:', error)
     return NextResponse.json(
-      { error: 'An unexpected error occurred. Please try again later.' },
+      { error: 'Errore imprevisto. Riprova più tardi.' },
       { status: 500 }
     )
   }
