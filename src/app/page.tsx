@@ -17,11 +17,21 @@ export default function Home() {
 
     const formData = new FormData(e.currentTarget)
     const data = {
-      firstName: formData.get('firstName') as string,
-      lastName: formData.get('lastName') as string,
-      email: formData.get('email') as string,
-      company: formData.get('company') as string,
-      message: formData.get('message') as string,
+      title: `Migraine - ${formData.get('date')}`,
+      body: `
+## Informations
+
+- **Date:** ${formData.get('date')}
+- **Durée:** ${formData.get('duree')}
+- **Intensité:** ${formData.get('intensite')}/10
+- **Localisation:** ${formData.get('localisation')}
+- **Symptômes:** ${formData.get('symptomes')}
+- **Déclencheur:** ${formData.get('declencheur')}
+- **Médicaments:** ${formData.get('medicaments')}
+
+## Notes
+${formData.get('notes')}
+      `.trim(),
     }
 
     try {
@@ -75,74 +85,114 @@ export default function Home() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label htmlFor="firstName" className="block text-sm font-medium text-text-label mb-1">
-                {t.fields.firstName} {t.required}
-              </label>
-              <input
-                type="text"
-                id="firstName"
-                name="firstName"
-                required
-                placeholder={t.placeholders.firstName}
-                className="w-full px-4 py-2 border border-border rounded-input focus:ring-2 focus:ring-primary-ring focus:border-transparent text-text-primary"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="lastName" className="block text-sm font-medium text-text-label mb-1">
-                {t.fields.lastName} {t.required}
-              </label>
-              <input
-                type="text"
-                id="lastName"
-                name="lastName"
-                required
-                placeholder={t.placeholders.lastName}
-                className="w-full px-4 py-2 border border-border rounded-input focus:ring-2 focus:ring-primary-ring focus:border-transparent text-text-primary"
-              />
-            </div>
-          </div>
-
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-text-label mb-1">
-              {t.fields.email} {t.required}
+            <label htmlFor="date" className="block text-sm font-medium text-text-label mb-1">
+              {t.fields.date} {t.required}
             </label>
             <input
-              type="email"
-              id="email"
-              name="email"
+              type="date"
+              id="date"
+              name="date"
               required
-              placeholder={t.placeholders.email}
               className="w-full px-4 py-2 border border-border rounded-input focus:ring-2 focus:ring-primary-ring focus:border-transparent text-text-primary"
             />
           </div>
 
           <div>
-            <label htmlFor="company" className="block text-sm font-medium text-text-label mb-1">
-              {t.fields.company} {t.required}
+            <label htmlFor="duree" className="block text-sm font-medium text-text-label mb-1">
+              {t.fields.duree} {t.required}
             </label>
             <input
               type="text"
-              id="company"
-              name="company"
+              id="duree"
+              name="duree"
               required
-              placeholder={t.placeholders.company}
+              placeholder={t.placeholders.duree}
               className="w-full px-4 py-2 border border-border rounded-input focus:ring-2 focus:ring-primary-ring focus:border-transparent text-text-primary"
             />
           </div>
 
           <div>
-            <label htmlFor="message" className="block text-sm font-medium text-text-label mb-1">
-              {t.fields.message} {t.required}
+            <label htmlFor="intensite" className="block text-sm font-medium text-text-label mb-1">
+              {t.fields.intensite} {t.required}
+            </label>
+            <input
+              type="number"
+              id="intensite"
+              name="intensite"
+              min="1"
+              max="10"
+              required
+              placeholder="1-10"
+              className="w-full px-4 py-2 border border-border rounded-input focus:ring-2 focus:ring-primary-ring focus:border-transparent text-text-primary"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="localisation" className="block text-sm font-medium text-text-label mb-1">
+              {t.fields.localisation} {t.required}
+            </label>
+            <input
+              type="text"
+              id="localisation"
+              name="localisation"
+              required
+              placeholder={t.placeholders.localisation}
+              className="w-full px-4 py-2 border border-border rounded-input focus:ring-2 focus:ring-primary-ring focus:border-transparent text-text-primary"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="symptomes" className="block text-sm font-medium text-text-label mb-1">
+              {t.fields.symptomes} {t.required}
+            </label>
+            <input
+              type="text"
+              id="symptomes"
+              name="symptomes"
+              required
+              placeholder={t.placeholders.symptomes}
+              className="w-full px-4 py-2 border border-border rounded-input focus:ring-2 focus:ring-primary-ring focus:border-transparent text-text-primary"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="declencheur" className="block text-sm font-medium text-text-label mb-1">
+              {t.fields.declencheur} {t.required}
+            </label>
+            <input
+              type="text"
+              id="declencheur"
+              name="declencheur"
+              required
+              placeholder={t.placeholders.declencheur}
+              className="w-full px-4 py-2 border border-border rounded-input focus:ring-2 focus:ring-primary-ring focus:border-transparent text-text-primary"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="medicaments" className="block text-sm font-medium text-text-label mb-1">
+              {t.fields.medicaments} {t.required}
+            </label>
+            <input
+              type="text"
+              id="medicaments"
+              name="medicaments"
+              required
+              placeholder={t.placeholders.medicaments}
+              className="w-full px-4 py-2 border border-border rounded-input focus:ring-2 focus:ring-primary-ring focus:border-transparent text-text-primary"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="notes" className="block text-sm font-medium text-text-label mb-1">
+              {t.fields.notes}
             </label>
             <textarea
-              id="message"
-              name="message"
-              required
-              rows={4}
-              placeholder={t.placeholders.message}
+              id="notes"
+              name="notes"
+              rows={3}
+              placeholder={t.placeholders.notes}
               className="w-full px-4 py-2 border border-border rounded-input focus:ring-2 focus:ring-primary-ring focus:border-transparent text-text-primary"
             />
           </div>

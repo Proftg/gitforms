@@ -1,9 +1,9 @@
 {
   "colors": {
     "primary": {
-      "DEFAULT": "#2563eb",
-      "hover": "#1d4ed8",
-      "ring": "#3b82f6"
+      "DEFAULT": "#7c3aed",
+      "hover": "#6d28d9",
+      "ring": "#8b5cf6"
     },
     "success": {
       "bg": "#f0fdf4",
@@ -17,7 +17,7 @@
     },
     "background": {
       "main": "#ffffff",
-      "page": "#f9fafb"
+      "page": "#f5f3ff"
     },
     "text": {
       "primary": "#111827",

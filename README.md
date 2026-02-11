@@ -1,402 +1,52 @@
-# GitForms
+# Journal des Migraines - GitForms
 
-**Zero-cost contact forms for your landing page** - powered by GitHub Issues.
+Un formulaire simple pour enregistrer tes crises de migraines, automatiquement stockées dans GitHub Issues.
 
-Every time someone submits your contact form, you receive an automatic email notification. No monthly fees, no external database.
+---
 
-> **GitForms** = Free alternative to Typeform, Tally, and FormSpree
+## Configuration
 
-## Features
-
-- ✅ **100% Configurable without code** (JSON files)
-- ✅ Automatic email notifications for every submission
-- ✅ Multilingual (IT/EN) with auto browser language detection
-- ✅ Customizable styling (colors, borders, shadows)
-- ✅ Customizable text (labels, messages, buttons)
-- ✅ Next.js 14 with App Router
-- ✅ TypeScript
-- ✅ Tailwind CSS
-- ✅ **Deploy anywhere** (Vercel, Netlify, Railway, Docker, AWS...)
-- ✅ Completely free
-
-## How It Works
-
-```
-User fills form → Data saved to GitHub Issue → Email notification sent
-```
-
-## Quick Setup
+Les variables d'environnement sont dans `.env.local` :
 
 ```bash
-# 1. Clone
-git clone https://github.com/Luigigreco/gitforms.git
-cd gitforms
+GITHUB_TOKEN=ghp_xxxxx
+GITHUB_REPO=Proftg/migraines-journal
+NEXT_PUBLIC_DEFAULT_LOCALE=fr
+```
 
-# 2. Install
+---
+
+## Lancer en local
+
+```bash
 npm install
-
-# 3. Configure
-cp .env.example .env.local
-# Edit .env.local with your GITHUB_TOKEN and GITHUB_REPO
-
-# 4. Start
 npm run dev
 ```
 
-Open http://localhost:3000
-
-## 🎨 Customization (ZERO Code!)
-
-### 1. Change All Colors
-
-**File:** `config/theme.json`
-
-```json
-{
-  "colors": {
-    "primary": {
-      "DEFAULT": "#10b981",  // Green instead of blue
-      "hover": "#059669",
-      "ring": "#34d399"
-    }
-  }
-}
-```
-
-**Popular colors:**
-- Purple: `#8b5cf6`, `#7c3aed`, `#a78bfa`
-- Orange: `#f97316`, `#ea580c`, `#fb923c`
-- Pink: `#ec4899`, `#db2777`, `#f472b6`
-
-### 2. Change All Text
-
-**File:** `config/translations.json`
-
-```json
-{
-  "it": {
-    "title": "Richiedi Informazioni",  // Change "Contattaci"
-    "fields": {
-      "company": "Società"  // Change "Azienda" to "Società"
-    },
-    "buttons": {
-      "submit": "Richiedi Contatto"  // Change button
-    }
-  }
-}
-```
-
-### 3. Change Default Language
-
-**File:** `.env.local`
-
-```env
-NEXT_PUBLIC_DEFAULT_LOCALE=it   # Force Italian
-# or
-NEXT_PUBLIC_DEFAULT_LOCALE=en   # Force English
-# or remove for auto-detection
-```
-
-### 4. Add New Language (e.g., French)
-
-**File:** `config/translations.json`
-
-```json
-{
-  "it": { ... },
-  "en": { ... },
-  "fr": {
-    "title": "Contactez-nous",
-    "subtitle": "Remplissez le formulaire...",
-    "fields": {
-      "firstName": "Prénom",
-      "lastName": "Nom",
-      "email": "Email",
-      "company": "Entreprise",
-      "message": "Message"
-    }
-  }
-}
-```
-
-Then update `src/app/translations.ts`:
-
-```typescript
-export type Locale = 'it' | 'en' | 'fr'
-```
-
-## 📁 Configuration Files
-
-| File | What You Configure |
-|------|-------------------|
-| **`config/theme.json`** | Colors, borders, shadows, styling |
-| **`config/translations.json`** | ALL text (title, fields, messages, buttons) |
-| **`.env.local`** | GitHub token, repo, default language |
-
-**Edit only these 3 files = complete customization!**
-
-## Form Fields
-
-All fields are **required**:
-- First Name
-- Last Name
-- Email
-- Company
-- Message
-
-## Test
-
-```bash
-curl -X POST http://localhost:3000/api/contact \
-  -H "Content-Type: application/json" \
-  -d '{
-    "firstName": "Mario",
-    "lastName": "Rossi",
-    "email": "mario@example.com",
-    "company": "ACME",
-    "message": "Ciao"
-  }'
-```
-
-## 🚀 Deploy Options
-
-### 1. Vercel (Recommended) ⚡
-
-**Easiest for Next.js** - 2 clicks, zero configuration.
-
-```bash
-# Install Vercel CLI (optional)
-npm i -g vercel
-
-# Deploy
-vercel
-```
-
-**Or via Dashboard:**
-1. Push to GitHub
-2. Import on [vercel.com](https://vercel.com/new)
-3. Add environment variables:
-   - `GITHUB_TOKEN`
-   - `GITHUB_REPO`
-   - `NEXT_PUBLIC_DEFAULT_LOCALE` (optional)
-4. Auto deploy!
-
-**Free Tier:** Unlimited for personal projects
+Accessible sur : http://localhost:3000
 
 ---
 
-### 2. Netlify
+## Champs du formulaire
 
-**Great Vercel alternative** - 2 clicks, great free tier.
-
-1. Push to GitHub
-2. Import on [netlify.com](https://app.netlify.com/start)
-3. Build settings:
-   - **Build command:** `npm run build`
-   - **Publish directory:** `.next`
-4. Environment variables:
-   - `GITHUB_TOKEN`
-   - `GITHUB_REPO`
-   - `NEXT_PUBLIC_DEFAULT_LOCALE` (optional)
-5. Deploy!
-
-**Free Tier:** 100GB bandwidth/month
+| Champ | Description |
+|-------|-------------|
+| Date | Date de la crise |
+| Durée | Durée de la crise |
+| Intensité | 1-10 |
+| Localisation | Tempe, front, occiput... |
+| Symptômes | Nausées, lumière, son... |
+| Déclencheur | Sport, stress, alimentation... |
+| Médicaments | Paracétamol, ibuprofène... |
+| Notes | Observations supplémentaires |
 
 ---
 
-### 3. Railway
+## Accéder aux données
 
-**Fast deploy with included databases** - 3 clicks, good free tier.
-
-1. Push to GitHub
-2. Go to [railway.app](https://railway.app)
-3. New Project → Deploy from GitHub
-4. Add environment variables (Dashboard → Variables)
-5. Railway auto-detects Next.js and deploys
-
-**Free Tier:** $5 credit/month (~500h runtime)
+Les crises sont enregistrées dans GitHub Issues :
+👉 https://github.com/Proftg/migraines-journal/issues
 
 ---
 
-### 4. Render.com
-
-**Alternative with free tier** - Auto-sleep after inactivity.
-
-1. Push to GitHub
-2. New Web Service on [render.com](https://render.com)
-3. Connect repository
-4. Settings:
-   - **Build Command:** `npm install && npm run build`
-   - **Start Command:** `npm start`
-5. Environment variables:
-   - `GITHUB_TOKEN`
-   - `GITHUB_REPO`
-
-**Free Tier:** Unlimited (with auto-sleep)
-
----
-
-### 5. Docker / Self-Hosted 🐳
-
-**Full control** - Deploy on any VPS/cloud.
-
-```bash
-# Build
-docker build -t gitforms .
-
-# Run
-docker run -p 3000:3000 \
-  -e GITHUB_TOKEN=your_token \
-  -e GITHUB_REPO=your_repo \
-  gitforms
-```
-
-**With Docker Compose:**
-
-```yaml
-# docker-compose.yml
-version: '3.8'
-services:
-  app:
-    build: .
-    ports:
-      - "3000:3000"
-    environment:
-      - GITHUB_TOKEN=${GITHUB_TOKEN}
-      - GITHUB_REPO=${GITHUB_REPO}
-      - NEXT_PUBLIC_DEFAULT_LOCALE=it
-    restart: unless-stopped
-```
-
-```bash
-docker-compose up -d
-```
-
-**Cost:** VPS from €5/month (DigitalOcean, Hetzner, Linode)
-
----
-
-### 6. AWS Amplify
-
-**Enterprise deployment** - Auto-scaling, global CDN.
-
-1. Push to GitHub
-2. AWS Console → Amplify → New App
-3. Connect repository
-4. Build settings (auto-detected):
-   ```yaml
-   version: 1
-   frontend:
-     phases:
-       preBuild:
-         commands:
-           - npm install
-       build:
-         commands:
-           - npm run build
-     artifacts:
-       baseDirectory: .next
-       files:
-         - '**/*'
-     cache:
-       paths:
-         - node_modules/**/*
-   ```
-5. Environment variables:
-   - `GITHUB_TOKEN`
-   - `GITHUB_REPO`
-
-**Free Tier:** 1000 build minutes/month, 15GB storage
-
----
-
-## 💰 Costs
-
-| Platform | Free Tier | Paid Cost |
-|----------|-----------|-----------|
-| **GitHub** (storage) | ✅ Unlimited | €0 |
-| **GitHub** (email) | ✅ Unlimited | €0 |
-| **Vercel** | ✅ Unlimited (personal) | €20/month (team) |
-| **Netlify** | ✅ 100GB bandwidth | €19/month (pro) |
-| **Railway** | ✅ $5 credit/month | $5/month per $5 usage |
-| **Render.com** | ✅ With auto-sleep | $7/month (always on) |
-| **Docker VPS** | ❌ | €5-20/month |
-| **AWS Amplify** | ✅ 1000 build min | Pay-as-you-go |
-
-**Recommendation:** Vercel or Netlify for guaranteed €0/month.
-
----
-
-## 📦 Deployment Comparison
-
-| Feature | Vercel | Netlify | Railway | Render | Docker |
-|---------|--------|---------|---------|--------|--------|
-| **Setup Time** | 2 min | 2 min | 3 min | 5 min | 10 min |
-| **Free Tier** | ✅ Best | ✅ Good | ✅ Limited | ✅ Auto-sleep | ❌ |
-| **Auto Deploy** | ✅ | ✅ | ✅ | ✅ | ❌ Manual |
-| **Custom Domain** | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **SSL/HTTPS** | ✅ Auto | ✅ Auto | ✅ Auto | ✅ Auto | ⚙️ Manual |
-| **Logs** | ✅ | ✅ | ✅ | ✅ | ⚙️ Manual |
-| **Scaling** | ✅ Auto | ✅ Auto | ✅ Auto | ⚙️ Manual | ⚙️ Manual |
-
----
-
-## Customization Examples
-
-### B2B Corporate Landing Page
-```json
-// config/translations.json
-{
-  "it": {
-    "title": "Richiedi una Demo",
-    "subtitle": "Compila il form per una demo personalizzata",
-    "buttons": { "submit": "Richiedi Demo" }
-  }
-}
-
-// config/theme.json
-{ "colors": { "primary": { "DEFAULT": "#1e3a8a" } } }  // Corporate blue
-```
-
-### E-commerce Landing Page
-```json
-// config/translations.json
-{
-  "it": {
-    "title": "Hai Domande?",
-    "fields": { "company": "Settore" },
-    "buttons": { "submit": "Invia Richiesta" }
-  }
-}
-
-// config/theme.json
-{ "colors": { "primary": { "DEFAULT": "#dc2626" } } }  // Sales red
-```
-
-## Documentation
-
-- **Deployment Guide:** See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed platform guides
-- **Testing Guide:** See [TESTING.md](TESTING.md) for API testing
-- **Monetization Ideas:** See [MONETIZATION.md](MONETIZATION.md) for revenue strategies
-- **SEO Setup:** See [SETUP_DISCOVERABILITY.md](SETUP_DISCOVERABILITY.md) for marketing
-
-## License
-
-CC-BY-NC-SA-4.0 (Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International)
-
-This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
-
-**Key Terms:**
-- ✅ **Attribution** - Credit must be given to Luigi Greco
-- ❌ **NonCommercial** - No commercial use without permission
-- ✅ **ShareAlike** - Derivatives must use the same license
-
-See [LICENSE](LICENSE) file for full legal text.
-
-## Repository
-
-https://github.com/Luigigreco/gitforms
-
----
-
-**Made with ❤️ by Luigi Greco** | [Star us on GitHub](https://github.com/Luigigreco/gitforms) ⭐
+*Créé: 2026-02-11*

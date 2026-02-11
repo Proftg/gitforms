@@ -1,28 +1,67 @@
 {
   "en": {
-    "title": "Contact Us",
-    "subtitle": "Fill out the form and we'll get back to you soon.",
+    "title": "Migraine Journal",
+    "subtitle": "Track your migraines to monitor your progress.",
     "fields": {
-      "firstName": "First Name",
-      "lastName": "Last Name",
-      "email": "Email",
-      "company": "Company",
-      "message": "Message"
+      "date": "Date",
+      "duree": "Duration",
+      "intensite": "Intensity",
+      "localisation": "Location",
+      "symptomes": "Symptoms",
+      "declencheur": "Trigger",
+      "medicaments": "Medications",
+      "notes": "Notes"
     },
     "placeholders": {
-      "firstName": "John",
-      "lastName": "Doe",
-      "email": "john.doe@example.com",
-      "company": "Your company",
-      "message": "How can we help you?"
+      "date": "2026-02-11",
+      "duree": "2 hours",
+      "intensite": "1-10",
+      "localisation": "Right temple, front, occiput...",
+      "symptomes": "Nausea, light sensitivity, sound...",
+      "declencheur": "Exercise, stress, food...",
+      "medicaments": "Paracetamol, ibuprofen...",
+      "notes": "Additional observations..."
     },
     "buttons": {
-      "submit": "Send Message",
-      "submitting": "Sending..."
+      "submit": "Record Migraine",
+      "submitting": "Recording..."
     },
     "messages": {
-      "success": "Thank you! We'll contact you soon.",
+      "success": "Migraine recorded successfully!",
       "error": "Error"
+    },
+    "required": "*"
+  },
+  "fr": {
+    "title": "Journal des Migraines",
+    "subtitle": "Note chaque crise pour suivre ton évolution.",
+    "fields": {
+      "date": "Date",
+      "duree": "Durée",
+      "intensite": "Intensité",
+      "localisation": "Localisation",
+      "symptomes": "Symptômes",
+      "declencheur": "Déclencheur",
+      "medicaments": "Médicaments",
+      "notes": "Notes"
+    },
+    "placeholders": {
+      "date": "2026-02-11",
+      "duree": "2 heures",
+      "intensite": "1-10",
+      "localisation": "Tempe droite, front, occiput...",
+      "symptomes": "Nausées, sensibilité à la lumière, au son...",
+      "declencheur": "Sport, stress, alimentation...",
+      "medicaments": "Paracétamol, ibuprofène...",
+      "notes": "Observations supplémentaires..."
+    },
+    "buttons": {
+      "submit": "Enregistrer la crise",
+      "submitting": "Enregistrement..."
+    },
+    "messages": {
+      "success": "✅ Crise enregistrée avec succès !",
+      "error": "Erreur lors de l'enregistrement"
     },
     "required": "*"
   }

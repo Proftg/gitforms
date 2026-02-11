@@ -1,30 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-interface ContactFormData {
-  firstName: string
-  lastName: string
-  email: string
-  company?: string
-  message: string
+interface MigraineFormData {
+  title: string
+  body: string
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const body: ContactFormData = await request.json()
+    const body: MigraineFormData = await request.json()
 
-    // Validate required fields (company is optional)
-    if (!body.firstName || !body.lastName || !body.email || !body.message) {
+    // Validate required fields
+    if (!body.title || !body.body) {
       return NextResponse.json(
-        { error: 'Tutti i campi obbligatori devono essere compilati' },
-        { status: 400 }
-      )
-    }
-
-    // Validate email
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(body.email)) {
-      return NextResponse.json(
-        { error: 'Email non valida' },
+        { error: 'Tous les champs sont obligatoires' },
         { status: 400 }
       )
     }
@@ -36,7 +24,7 @@ export async function POST(request: NextRequest) {
     if (!GITHUB_TOKEN || !GITHUB_REPO) {
       console.error('Missing GitHub configuration')
       return NextResponse.json(
-        { error: 'Errore di configurazione. Contatta l\'amministratore.' },
+        { error: 'Erreur de configuration. Contacte l\'admin.' },
         { status: 500 }
       )
     }
@@ -45,39 +33,12 @@ export async function POST(request: NextRequest) {
     if (!owner || !repo) {
       console.error('Invalid GITHUB_REPO format')
       return NextResponse.json(
-        { error: 'Errore di configurazione. Contatta l\'amministratore.' },
+        { error: 'Erreur de configuration. Contacte l\'admin.' },
         { status: 500 }
       )
     }
 
-    // Prepare contact data
-    const fullName = `${body.firstName} ${body.lastName}`
-    const timestamp = new Date()
-    const dateStr = timestamp.toLocaleDateString('it-IT', { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    })
-
-    // Save to GitHub (free database storage)
-    const contactData = `# Nuovo Contatto
-
-**Nome:** ${body.firstName}  
-**Cognome:** ${body.lastName}  
-**Email:** ${body.email}  
-**Azienda:** ${body.company || 'Non fornita'}  
-**Data:** ${dateStr}
-
-## Messaggio
-
-${body.message}
-
----
-*Ricevuto dalla landing page*
-`
-
+    // Save to GitHub Issues (free database storage)
     const response = await fetch(
       `https://api.github.com/repos/${owner}/${repo}/issues`,
       {
@@ -89,33 +50,35 @@ ${body.message}
           'X-GitHub-Api-Version': '2022-11-28',
         },
         body: JSON.stringify({
-          title: `📧 ${fullName}${body.company ? ' - ' + body.company : ''}`,
-          body: contactData,
-          labels: ['contatto'],
+          title: body.title,
+          body: body.body,
+          labels: ['migraine'],
         }),
       }
     )
 
     if (!response.ok) {
-      console.error('Failed to save contact')
+      console.error('Failed to save migraine entry')
+      const errorData = await response.json()
+      console.error('GitHub error:', errorData)
       return NextResponse.json(
-        { error: 'Errore durante il salvataggio. Riprova.' },
+        { error: 'Erreur lors de l\'enregistrement. Réessaie.' },
         { status: 500 }
       )
     }
 
-    // Success - GitHub will send email notification automatically
+    // Success
     return NextResponse.json(
       {
         success: true,
-        message: 'Grazie! Ti contatteremo a breve.',
+        message: 'Crise enregistrée avec succès !',
       },
       { status: 201 }
     )
   } catch (error) {
     console.error('Error:', error)
     return NextResponse.json(
-      { error: 'Errore imprevisto. Riprova più tardi.' },
+      { error: 'Erreur inattendue. Réessaie plus tard.' },
       { status: 500 }
     )
   }
